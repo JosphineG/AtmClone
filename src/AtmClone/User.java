@@ -90,4 +90,9 @@ public class User {
     public String getAcctUUID(int acctIdx) {
         return  this.accounts.get(acctIdx).getUUID();
     }
+
+    public double getAcctTransHistory(int acctIdx) {
+        return  this.accounts.get(acctIdx).getTransactionHistory();
+
+    }
 }

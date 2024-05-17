@@ -59,4 +59,12 @@ public class Account {
         Transaction newTrans = new Transaction(amount,memo,this);
         this.transactions.add(newTrans);
     }
+
+    public double getTransactionHistory() {
+        double total = 0.0;
+        for (Transaction trans : this.transactions) {
+            total += trans.getAmount();
+        }
+        return total;
+    }
 }
