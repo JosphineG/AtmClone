@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #000080;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AtmClone.DashboardController">
+   <children>
+      <ButtonBar layoutX="120.0" layoutY="180.0" prefHeight="40.0" prefWidth="200.0" />
+      <Button fx:id="quitButton" layoutX="348.0" layoutY="183.0" mnemonicParsing="false" onAction="#handleQuitButtonAction" prefHeight="25.0" prefWidth="171.0" style="-fx-background-color: #FFA602;" text="Quit" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="transferButton" layoutX="347.0" layoutY="134.0" mnemonicParsing="false" onAction="#handleTransferButtonAction" prefHeight="25.0" prefWidth="171.0" style="-fx-background-color: FFA602;" text="Transfer" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="viewTransactionHistoryButton" layoutX="64.0" layoutY="134.0" mnemonicParsing="false" onAction="#handleTransactionHistoryButtonAction" prefHeight="25.0" prefWidth="171.0" style="-fx-background-color: #FFA602;" text="View Transaction History" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="withdrawButton" layoutX="64.0" layoutY="186.0" mnemonicParsing="false" onAction="#handleWithdrawButtonAction" prefHeight="25.0" prefWidth="171.0" style="-fx-background-color: #FFA602;" text="Withdraw" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="depositButton" layoutX="64.0" layoutY="242.0" mnemonicParsing="false" onAction="#handleDepositButtonAction" prefHeight="25.0" prefWidth="171.0" style="-fx-background-color: #FFA602;" text="Deposit" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Label fx:id="welcomeLabel" layoutX="251.0" layoutY="45.0" text="Welcome Josphine!" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="250.0" layoutY="73.0" text="What would you like to do?" textFill="WHITE">
+         <font>
+            <Font name="System Italic" size="13.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
