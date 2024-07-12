@@ -95,4 +95,8 @@ public class User {
         return  this.accounts.get(acctIdx).getTransactionHistory();
 
     }
+
+    public String getFirstName() {
+        return  this.firstName;
+    }
 }

@@ -1,127 +1,128 @@
 package AtmClone;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
-public class ATMController {
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ResourceBundle;
+
+public class ATMController implements Initializable {
 
     @FXML
-    private TextField userIDField;
+    private TextField usernameTextField;
 
     @FXML
-    private PasswordField pinField;
+    private PasswordField enterPasswordField;
+
+    @FXML
+    private Button loginButton;
+
+    @FXML
+    private Label invalidLoginLabel;
 
     @FXML
     private Label welcomeLabel;
 
     @FXML
-    private TextArea transactionHistoryArea;
-
-    @FXML
-    private TextField amountField;
-
-    @FXML
-    private TextField fromAccountField;
-
-    @FXML
-    private TextField toAccountField;
-
-    @FXML
-    private Pane loginPane;
-
-    @FXML
-    private Pane userPane;
-
-    private Bank theBank = new Bank("Kenya Commercial Bank");
+    private ImageView brandingImageView;
 
     private User authUser;
+    private Bank theBank;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            URL brandingFileUrl = getClass().getResource("/images/login.png");
+            System.out.println(brandingFileUrl);
+
+            if (brandingFileUrl != null) {
+                Image brandingImage = new Image(brandingFileUrl.toString());
+                brandingImageView.setImage(brandingImage);
+            } else {
+                System.out.println("File not found: images/login.png");
+            }
+        } catch (Exception e) {
+            System.out.println("Error loading image: " + e.getMessage());
+        }
+
+        theBank = new Bank("ABC");
+    }
 
     @FXML
     public void handleLoginButtonAction() {
-        String uuid = userIDField.getText();
-        String pin = pinField.getText();
-        authUser = theBank.userLogin(uuid, pin);
-
-        if (authUser != null) {
-            java.awt.Label welcomeUserLabel = null;
-            welcomeUserLabel.setText("Welcome " + authUser.getfirstName());
-            loginPane.setVisible(false);
-            userPane.setVisible(true);
+        if (validateLogin()) {
+            welcomeLabel.setText("Welcome " + authUser.getFirstName());
+            invalidLoginLabel.setVisible(false);
+            loadDashboard();
         } else {
-            showAlert("Login Error", "Incorrect user ID/pin. Please try again.");
-        }
-    }
-
-    @FXML
-    private void handleTransactionHistory() {
-        int acctIdx = Integer.parseInt(fromAccountField.getText()) - 1;
-        transactionHistoryArea.setText(String.valueOf(authUser.getAcctTransHistory(acctIdx)));
-    }
-
-    @FXML
-    private void handleWithdraw() {
-        int acctIdx = Integer.parseInt(fromAccountField.getText()) - 1;
-        double amount = Double.parseDouble(amountField.getText());
-        String memo = "Withdrawal";
-
-        if (authUser.getAcctBalance(acctIdx) >= amount) {
-            authUser.addAcctTransaction(acctIdx, -amount, memo);
-            showAlert("Success", "Withdrawal successful.");
-        } else {
-            showAlert("Error", "Insufficient funds.");
-        }
-    }
-
-    @FXML
-    private void handleDeposit() {
-        int acctIdx = Integer.parseInt(toAccountField.getText()) - 1;
-        double amount = Double.parseDouble(amountField.getText());
-        String memo = "Deposit";
-
-        authUser.addAcctTransaction(acctIdx, amount, memo);
-        showAlert("Success", "Deposit successful.");
-    }
-
-    @FXML
-    private void handleTransfer() {
-        int fromAcctIdx = Integer.parseInt(fromAccountField.getText()) - 1;
-        int toAcctIdx = Integer.parseInt(toAccountField.getText()) - 1;
-        double amount = Double.parseDouble(amountField.getText());
-
-        if (authUser.getAcctBalance(fromAcctIdx) >= amount) {
-            authUser.addAcctTransaction(fromAcctIdx, -amount, String.format("Transfer to account %s", authUser.getAcctUUID(toAcctIdx)));
-            authUser.addAcctTransaction(toAcctIdx, amount, String.format("Transfer from account %s", authUser.getAcctUUID(fromAcctIdx)));
-            showAlert("Success", "Transfer successful.");
-        } else {
-            showAlert("Error", "Insufficient funds.");
+            showAlert("Login Error", "Invalid Logins. Please Try Again!");
+            invalidLoginLabel.setVisible(true);
         }
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        System.out.println(title + ": " + message);
     }
 
-//    public void handleLoginButtonAction(ActionEvent actionEvent) {
-//    }
-
-    public void handleTransactionHistoryButtonAction(ActionEvent actionEvent) {
+    public void resetLoginForm() {
+        usernameTextField.clear();
+        enterPasswordField.clear();
+        invalidLoginLabel.setVisible(false);
     }
 
-    public void handleWithdrawButtonAction(ActionEvent actionEvent) {
+    private boolean validateLogin() {
+        MyJDBC connectNow = new MyJDBC();
+        Connection connection = connectNow.getConnection();
+
+        String username = usernameTextField.getText();
+        String password = enterPasswordField.getText();
+
+        String verifyLogin = "SELECT * FROM users WHERE userName = '" + username + "' AND password ='" + password + "'";
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(verifyLogin)) {
+
+            if (resultSet.next()) {
+                String firstName = resultSet.getString("firstname");
+                String lastName = resultSet.getString("lastname");
+                String userId = resultSet.getString("userId");
+                authUser = new User(firstName, lastName, password, theBank);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
-    public void handleDepositButtonAction(ActionEvent actionEvent) {
-    }
+    private void loadDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard.fxml"));
+            Parent root = loader.load();
 
-    public void handleTransferButtonAction(ActionEvent actionEvent) {
-    }
+            DashboardController dashboardController = loader.getController();
+            dashboardController.setAuthUser(authUser);
 
-    public void handleQuitButtonAction(ActionEvent actionEvent) {
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

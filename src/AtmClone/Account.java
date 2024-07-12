@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class Account {
     private  String name;
 
-
     private String uuid;
 
     private User holder;

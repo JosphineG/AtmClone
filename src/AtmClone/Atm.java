@@ -25,17 +25,17 @@ public class Atm {
 //
 
     public  static  User mainMenuPrompt(Bank theBank, Scanner sc){
-        String userID;
+        String userUuid;
         String  pin;
         User authUser;
         do {
             System.out.printf("\n\nWelcome to %s\n\n", theBank.getName());
             System.out.print("Enter user ID: ");
-            userID = sc.nextLine();
+            userUuid = sc.nextLine();
             System.out.print("Enter  pin: ");
             pin = sc.nextLine();
 
-            authUser = theBank.userLogin(userID,pin);
+            authUser = theBank.userLogin(userUuid,pin);
             if (authUser == null){
                 System.out.println(("Incorrect user ID/pin." + "Please try again."));
             }
@@ -89,14 +89,6 @@ public class Atm {
 
     }
 
-//    private static void transferFunds(User theUser, Scanner sc) {
-//    }
-
-//    private static void depositFunds(User theUser, Scanner sc) {
-//    }
-
-//    private static void withdrawMoney(User theUser, Scanner sc) {
-//    }
 
     private static void showTransHistory(User theUser, Scanner sc) {
         int theAcct;

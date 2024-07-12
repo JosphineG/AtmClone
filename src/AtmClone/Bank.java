@@ -74,9 +74,9 @@ public class Bank {
         return  newUser;
     }
 
-    public  User userLogin(String userID, String aPin){
+    public  User userLogin(String userUuid, String pin){
         for (User u : this.users){
-            if(u.getUUID().compareTo(userID) == 0 && u.validatePin(aPin)){
+            if(u.getUUID().compareTo(userUuid) == 0 && u.validatePin(pin)){
                 return  u;
             }
         }
