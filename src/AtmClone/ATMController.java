@@ -42,6 +42,9 @@ public class ATMController implements Initializable {
     private User authUser;
     private Bank theBank;
 
+    public static void showLoginPage() {
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -115,7 +118,7 @@ public class ATMController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard.fxml"));
             Parent root = loader.load();
 
-            DashboardController dashboardController = loader.getController();
+            AtmClone.DashboardController dashboardController = loader.getController();
             dashboardController.setAuthUser(authUser);
 
             Stage stage = (Stage) loginButton.getScene().getWindow();
